@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-// ci sono problemi con giuliano di roma
+
 using std::cin;
 using std::cout;
 using std::endl;
@@ -32,22 +32,26 @@ int main()
 {
     fill_n(fonti, numero_di_fonti, 1); // abilita tutte le fonti
     char choice;
-    cout<<"seleziona la modalita' di utilizzo:"<<endl;
-    cout<<"1) ricerca "<<endl;
-    cout<<"2) creazione di un file"<<endl;
-    choice=getchar();
-    while ((getchar()) != '\n');
-    if(choice == '1') user_friendly();
-    else if(choice == '2') file_maker();
-    else cout<<"scelta non valida"<<endl;
+    cout << "seleziona la modalita' di utilizzo:" << endl;
+    cout << "1) ricerca " << endl;
+    cout << "2) creazione di un file" << endl;
+    choice = getchar();
+    while ((getchar()) != '\n')
+        ;
+    if (choice == '1')
+        user_friendly();
+    else if (choice == '2')
+        file_maker();
+    else
+        cout << "scelta non valida" << endl;
     cout << "premi invio per uscire" << endl;
-    while ((getchar()) != '\n'); // pulisci il buffer
+    // while ((getchar()) != '\n'); // pulisci il buffer
     cin.get(); // aspetta l'input
 }
 
 int user_friendly()
 {
-    string termini;                    // comando inserito dall'utente
+    string termini; // comando inserito dall'utente
     char write = 0;
     vector<string> keywords; // lista di termini da ricercare
 
@@ -197,7 +201,7 @@ void file_analyzer(vector<string> parole, bool write)
 {
     string riga;
     ifstream file;
-    fill_n(comparse,numero_di_fonti,0);
+    fill_n(comparse, numero_di_fonti, 0);
     for (int i = 0; i < numero_di_fonti; i++)
     {
         if (fonti[i])
@@ -252,55 +256,61 @@ string to_low(string x)
 
 int file_maker()
 {
-    vector <string> ricerche; 
+    vector<string> ricerche;
     string input;
     int tot = 0;
-    cout<<"inserisci un termine e premi invio; "<<endl<<"ripeti l'azione per ogni termine da ricercare e poi premi 2 volte invio"<<endl;
+    cout << "inserisci un termine e premi invio; " << endl
+         << "ripeti l'azione per ogni termine da ricercare e poi premi 2 volte invio" << endl;
     do
     {
-        getline(cin,input);
+        getline(cin, input);
         ricerche.push_back(input);
-        
-    } while (input!="");
-    //stabilisci fonti
-    while (definizione_fonti()){} // scegli le fonti da abilitare
+
+    } while (input != "");
+    // stabilisci fonti
+    while (definizione_fonti())
+    {
+    } // scegli le fonti da abilitare
 
     fstream new_file("risultati.csv", ios::out);
     if (new_file.is_open())
     {
-        new_file<<"termine di ricerca,";
-        if(fonti[0])new_file<<"aziende destinate,";
-        if(fonti[1])new_file<<"immobili destinati,";
-        if(fonti[2])new_file<<"procedure in gestione,";
-        new_file<<"totale"<<endl;
+        new_file << "termine di ricerca,";
+        if (fonti[0])
+            new_file << "aziende destinate,";
+        if (fonti[1])
+            new_file << "immobili destinati,";
+        if (fonti[2])
+            new_file << "procedure in gestione,";
+        new_file << "totale" << endl;
 
-
-        for (int l = 0; l < ricerche.size()-1; l++) //per ogni termine ricerca nei file
+        for (int l = 0; l < ricerche.size() - 1; l++) // per ogni termine ricerca nei file
         {
-            tot=0;
+            tot = 0;
             search(ricerche[l]);
-            new_file<<ricerche[l];
+            new_file << ricerche[l];
             for (int h = 0; h < numero_di_fonti; h++) // per ogni fonte scrivi i valori
             {
-                if(fonti[h]){
-                new_file<<",";
-                new_file<<comparse[h];
+                if (fonti[h])
+                {
+                    new_file << ",";
+                    new_file << comparse[h];
                 }
 
-                tot+=comparse[h];
+                tot += comparse[h];
             }
-            new_file<<","<<tot;
-            new_file<<endl;
-            
+            new_file << "," << tot;
+            new_file << endl;
         }
         new_file.close();
     }
-    cout<<"puoi trovare il file completo nella cartella di questo eseguibile"<<endl;
+    cout << "puoi trovare il file completo nella cartella di questo eseguibile" << endl;
     return 0;
 }
 
-void search(string ricerca){
-    vector <string> scomposta;
+void search(string ricerca)
+{
+    vector<string> scomposta;
     scomposta = string_analyzer(ricerca);
-    file_analyzer(scomposta,0); //assegna quanto compare
+    file_analyzer(scomposta, 0); // assegna quanto compare
 }
